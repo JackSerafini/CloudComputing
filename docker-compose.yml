@@ -1,0 +1,35 @@
+services:
+  container1:
+    build: ./app
+    cpuset: "0,2,4,6"
+    container_name: container1
+    command: ["tail", "-f", "/dev/null"]
+    networks:
+      - internal_net
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: '4g'
+    privileged: true
+    cap_add:
+      - SYS_NICE
+  container2:
+    build: ./app
+    cpuset: "8,10"
+    container_name: container2
+    command: ["tail", "-f", "/dev/null"]
+    networks:
+      - internal_net
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: '2g'
+    privileged: true
+    cap_add:
+      - SYS_NICE
+
+networks:
+  internal_net:
+    driver: bridge
