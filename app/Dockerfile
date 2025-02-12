@@ -1,10 +1,18 @@
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y \
-    hpcc \
-    iozone3 \
-    iperf3 \
-    sysbench \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+        wget \
+        git \
+        nano \
+        build-essential \
+        hwloc \
+        libhwloc-dev \
+        libevent-dev \
+        gfortran \
+        iozone3 \
+        iperf3 \
+        sysbench \
+        htop 
 
 CMD ["bash"]
