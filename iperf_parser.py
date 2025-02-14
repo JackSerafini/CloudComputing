@@ -7,7 +7,7 @@ def parse_iperf_output(log_filename, output_csv):
 
     csv_data = []
     # Define a header appropriate for iperf3 output
-    csv_data.append(["run", "start", "end", "transfer", "bitrate", "retr", "cwnd"])
+    csv_data.append(["run", "start", "end", "transfer", "bitrate"])
     run_id = None
     # Regex to capture interval data from iperf3
     interval_regex = re.compile(r"\[\s*\d+\]\s+(\d+\.\d+)-(\d+\.\d+)\s+sec\s+([\d\.]+\s+\w+)\s+([\d\.]+\s+\w+)(?:\s+(\d+))?(?:\s+([\d\.]+\s+\w+))?")
@@ -27,7 +27,7 @@ def parse_iperf_output(log_filename, output_csv):
         m = interval_regex.search(line)
         if m:
             start, end, transfer, bitrate, retr, cwnd = m.groups()
-            csv_data.append([run_id, start, end, transfer, bitrate, retr if retr else "", cwnd if cwnd else ""])
+            csv_data.append([run_id, start, end, transfer, bitrate])
 
     with open(output_csv, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
