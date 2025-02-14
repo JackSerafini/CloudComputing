@@ -6,30 +6,29 @@ def parse_iperf_output(log_filename, output_csv):
         lines = log_file.readlines()
 
     csv_data = []
-    header_found = False
+    # Define a header appropriate for iperf3 output
+    csv_data.append(["run", "start", "end", "transfer", "bitrate", "retr", "cwnd"])
     run_id = None
+    # Regex to capture interval data from iperf3
+    interval_regex = re.compile(r"\[\s*\d+\]\s+(\d+\.\d+)-(\d+\.\d+)\s+sec\s+([\d\.]+\s+\w+)\s+([\d\.]+\s+\w+)(?:\s+(\d+))?(?:\s+([\d\.]+\s+\w+))?")
 
     for line in lines:
         line = line.strip()
-        
-        # Detect run ID
-        match = re.match(r">> -- \[ RUN (\d+) \]", line)
-        if match:
-            run_id = match.group(1)
+        # Detect run marker
+        run_match = re.match(r">> -- \[ RUN (\d+) \]", line)
+        if run_match:
+            run_id = run_match.group(1)
             continue
-        
-        # Capture header
-        if not header_found and "timestamp" in line:
-            header = ["run"] + line.split(",")
-            csv_data.append(header)
-            header_found = True
-            continue
-        
-        # Capture data rows
-        if header_found and re.match(r"^\d{14},", line):
-            csv_data.append([run_id] + line.split(","))
 
-    # Write to CSV file
+        # Skip header or non-data lines
+        if "Interval" in line and "Transfer" in line:
+            continue
+
+        m = interval_regex.search(line)
+        if m:
+            start, end, transfer, bitrate, retr, cwnd = m.groups()
+            csv_data.append([run_id, start, end, transfer, bitrate, retr if retr else "", cwnd if cwnd else ""])
+
     with open(output_csv, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerows(csv_data)
