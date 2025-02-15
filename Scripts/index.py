@@ -4,8 +4,8 @@ from iperf_parser import parse_iperf_output
 from iozone_parser import parse_iozone_output
 import os
 
-output_folder = "./csv"
-log_folder = "./logs"
+output_folder = "../csv"
+log_folder = "../logs"
 
 for filename in os.listdir(log_folder):
   output_filename = filename.split('-2025')[0] + ".csv"

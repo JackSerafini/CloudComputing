@@ -4,8 +4,8 @@ from iperf_average import average_iperf_csv
 from sysbench_average import average_sysbench_csv
 import os
 
-output_folder = "./avgs"
-csv_folder = "./csv"
+output_folder = "../avgs"
+csv_folder = "../csv"
 
 for filename in os.listdir(csv_folder):
     output_filename = filename.split('.')[0] + "_avg.csv"
